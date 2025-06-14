@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Lugares Culturales - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Lugares Culturales en Puebla</h2>
+
+<section>
+    <h3>Museos y Espacios Culturales (Wikidata)</h3>
+    <div>
+        {% for lugar in lugares_wikidata %}
+        <article>
+            {% if lugar.imagen %}
+            <img src="{{ lugar.imagen }}" alt="{{ lugar.nombre }}">
+            {% endif %}
+            <h4>{{ lugar.nombre }}</h4>
+            {% if lugar.coordenadas %}
+            <a href="https://www.google.com/maps/search/?api=1&query={{ lugar.coordenadas }}" target="_blank">Ver en Google Maps</a>
+            {% endif %}
+        </article>
+        {% empty %}
+        <p>No se pudieron cargar los lugares desde Wikidata</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section>
+    <h3>Lugares Registrados en RadarCultural</h3>
+    <div>
+        {% for lugar in lugares_locales %}
+        <article>
+            {% if lugar.imagen_perfil %}
+            <img src="{{ lugar.imagen_perfil.url }}" alt="{{ lugar.nombre_entidad }}">
+            {% endif %}
+            <h4>{{ lugar.nombre_entidad }}</h4>
+            <p>{{ lugar.descripcion|truncatewords:20 }}</p>
+            <a href="{% url 'detalle_difusor' lugar.id %}">Ver perfil completo</a>
+        </article>
+        {% empty %}
+        <p>No hay lugares registrados aún</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Contenido Pendiente - Admin{% endblock %}
+
+{% block content %}
+<h2>Contenido Pendiente de Aprobación</h2>
+
+<section>
+    <h3>Eventos Pendientes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Difusor</th>
+                <th>Fecha Evento</th>
+                <th>Fecha Creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evento in eventos_pendientes %}
+            <tr>
+                <td>{{ evento.titulo }}</td>
+                <td>{{ evento.difusor.nombre_entidad }}</td>
+                <td>{{ evento.fecha_evento|date:"d/m/Y H:i" }}</td>
+                <td>{{ evento.fecha_creacion|date:"d/m/Y" }}</td>
+                <td>
+                    <form method="post" action="{% url 'aprobar_contenido' 'evento' evento.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Aprobar</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No hay eventos pendientes</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section>
+    <h3>Publicaciones Pendientes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Difusor</th>
+                <th>Fecha Publicación</th>
+                <th>Fecha Creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for publicacion in publicaciones_pendientes %}
+            <tr>
+                <td>{{ publicacion.titulo }}</td>
+                <td>{{ publicacion.difusor.nombre_entidad }}</td>
+                <td>{{ publicacion.fecha_publicacion|date:"d/m/Y" }}</td>
+                <td>{{ publicacion.fecha_creacion|date:"d/m/Y" }}</td>
+                <td>
+                    <form method="post" action="{% url 'aprobar_contenido' 'publicacion' publicacion.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Aprobar</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No hay publicaciones pendientes</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

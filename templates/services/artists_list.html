@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Artistas - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Artistas</h2>
+
+<form method="get">
+    <div>
+        <label for="disciplina">Disciplina:</label>
+        <select name="disciplina" id="disciplina">
+            <option value="">Todas</option>
+            {% for disc in disciplinas %}
+            <option value="{{ disc.nombre }}" {% if request.GET.disciplina == disc.nombre %}selected{% endif %}>
+                {{ disc.get_nombre_display }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit">Filtrar</button>
+</form>
+
+<div>
+    {% for artista in page_obj %}
+    <article>
+        {% if artista.imagen_perfil %}
+        <img src="{{ artista.imagen_perfil.url }}" alt="{{ artista.nombre_entidad }}">
+        {% endif %}
+        <h3>{{ artista.nombre_entidad }}</h3>
+        <p>{{ artista.descripcion|truncatewords:20 }}</p>
+        <p>Disciplinas: {% for disc in artista.disciplinas.all %}{{ disc.get_nombre_display }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        <a href="{% url 'detalle_difusor' artista.id %}">Ver perfil</a>
+    </article>
+    {% empty %}
+    <p>No hay artistas registrados</p>
+    {% endfor %}
+</div>
+
+<div>
+    <span>
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; Primera</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+        
+        <span>
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+        
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

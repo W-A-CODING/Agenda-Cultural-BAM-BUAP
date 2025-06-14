@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Eventos - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Lista de Eventos</h2>
+
+<form method="get">
+    <div>
+        <label for="disciplina">Disciplina:</label>
+        <select name="disciplina" id="disciplina">
+            <option value="">Todas</option>
+            {% for disc in disciplinas %}
+            <option value="{{ disc.nombre }}" {% if request.GET.disciplina == disc.nombre %}selected{% endif %}>
+                {{ disc.get_nombre_display }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div>
+        <label for="clasificacion">Clasificación:</label>
+        <select name="clasificacion" id="clasificacion">
+            <option value="">Todas</option>
+            <option value="todo_publico" {% if request.GET.clasificacion == 'todo_publico' %}selected{% endif %}>Todo Público</option>
+            <option value="infantil" {% if request.GET.clasificacion == 'infantil' %}selected{% endif %}>Infantil</option>
+            <option value="adolescentes" {% if request.GET.clasificacion == 'adolescentes' %}selected{% endif %}>Adolescentes</option>
+            <option value="adultos" {% if request.GET.clasificacion == 'adultos' %}selected{% endif %}>Adultos</option>
+        </select>
+    </div>
+    
+    <div>
+        <label for="gratuito">Solo eventos gratuitos:</label>
+        <input type="checkbox" name="gratuito" value="si" {% if request.GET.gratuito == 'si' %}checked{% endif %}>
+    </div>
+    
+    <button type="submit">Filtrar</button>
+</form>
+
+<div id="ubicacion-permiso">
+    <button onclick="solicitarUbicacion()">Permitir ubicación para ver eventos cercanos</button>
+</div>
+
+<div id="lista-eventos">
+    {% for evento in page_obj %}
+    <article>
+        <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}">
+        <h3>{{ evento.titulo }}</h3>
+        <p>{{ evento.fecha_evento|date:"d/m/Y H:i" }}</p>
+        <p>{{ evento.lugar }}</p>
+        <p>{% if evento.es_gratuito %}Gratuito{% else %}${{ evento.precio }}{% endif %}</p>
+        <p>{{ evento.difusor.nombre_entidad }}</p>
+        <a href="{% url 'detalle_difusor' evento.difusor.id %}">Ver más</a>
+    </article>
+    {% empty %}
+    <p>No hay eventos disponibles</p>
+    {% endfor %}
+</div>
+
+<div>
+    <span>
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; Primera</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+        
+        <span>
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+        
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<script>
+function solicitarUbicacion() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            window.location.href = window.location.pathname + '?lat=' + position.coords.latitude + '&lon=' + position.coords.longitude;
+        });
+    }
+}
+</script>
+{% endblock %}

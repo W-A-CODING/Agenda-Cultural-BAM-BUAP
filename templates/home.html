@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Inicio - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Bienvenido a RadarCultural</h2>
+
+{% if not user.is_authenticated %}
+<section>
+    <p>Descubre eventos culturales en Puebla</p>
+    <a href="{% url 'registro' %}">Regístrate</a>
+    <a href="{% url 'login' %}">Inicia Sesión</a>
+</section>
+{% endif %}
+
+{% if user.is_authenticated and user.tipo_usuario in 'general,estudiante' %}
+<section>
+    <p>¿Eres un difusor cultural?</p>
+    <a href="{% url 'registro_difusor' %}">Solicita ser Difusor</a>
+</section>
+{% endif %}
+
+<section>
+    <h3>Próximos Eventos</h3>
+    <div id="carousel">
+        {% for evento in eventos_carousel %}
+        <div>
+            <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}">
+            <h4>{{ evento.titulo }}</h4>
+            <p>{{ evento.fecha_evento|date:"d/m/Y H:i" }}</p>
+        </div>
+        {% empty %}
+        <p>No hay eventos disponibles</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

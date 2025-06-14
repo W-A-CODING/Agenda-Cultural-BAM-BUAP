@@ -1,0 +1,127 @@
+<!-- Base de la que heredan las demás plantillas -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" href="{% static '' %}">
+    <title>{% block title %}RadarCultural{% endblock %}</title>
+
+    <!-- Estilos  -->
+    <link href="{% static 'css/base.css' %}?v={{ now|date:'U' }}" rel="stylesheet">
+    <link href="{% static 'css/notifications.css' %}?v={{ now|date:'U' }}" rel="stylesheet">
+    {% block extrahead %}{% endblock %}
+</head>
+
+<body>
+    <!-- Loader -->
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a class="navbar-left-a" href="{% url 'index' %}">
+                <img id="navbar-logo" src="{% static 'images/logo.png' %}" alt="Logo">
+            </a>
+        </div>
+
+        <button class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="navbar-right">
+            <ul>
+                {% if user.tipo_usuario == 'general' or user.tipo_usuario == 'estudiante' or user.tipo_usuario == NULL %}
+                    <li><a href="{% url 'index' %}">Inicio</a></li>
+                    <li><a href="{% url 'acerca_de' %}">Acerca de Nosotros</a></li>
+                    <li><a href="{% url 'agenda' %}">Agenda</a></li>
+                    <li><a href="{% url 'lista_eventos' %}">Eventos</a></li>
+                    <li><a href="{% url 'lista_publicaciones' %}">Publicaciones</a></li>
+                    <li><a href="{% url 'lista_lugares' %}">Lugares</a></li>
+                    <li><a href="{% url 'lista_artistas' %}">Artistas</a></li>
+                {% endif %}
+                
+                {% if user.is_authenticated %}
+                    {% if user.tipo_usuario == 'administrador' %}
+                        <li class="nav-admin"><a href="{% url 'admin_solicitudes' %}">Solicitudes</a></li>
+                        <li class="nav-admin"><a href="{% url 'admin_contenido' %}">Contenido</a></li>
+                    {% elif user.tipo_usuario == 'difusor' %}
+                        <li class="nav-profile"><a href="{% url 'perfil_difusor' %}">Mi Perfil Difusor</a></li>
+                    {% else %}
+                        <li class="nav-profile"><a href="{% url 'perfil_usuario' %}">Mi Perfil</a></li>
+                    {% endif %}
+                    <li class="nav-username">Hola, {{ user.username }}</li>
+                    <li class="nav-logout"><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                {% else %}
+                    <li class="nav-login"><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+                    <li class="nav-register"><a href="{% url 'registro' %}">Registrarse</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Mensajes -->
+    <div class="contenedor-toast" id="contenedor-toast"></div>
+    
+    {% if messages %}
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+                let tipo = '{{ message.tags }}';
+                // Mapear tags de Django a tipos de notificación
+                switch(tipo) {
+                    case 'Error':
+                        tipo = 'error';
+                        break;
+                    case 'Exito':
+                        tipo = 'exito';
+                        break;
+                    case 'Advertencia':
+                        tipo = 'warning';
+                        break;
+                    case 'info':
+                        tipo = 'info';
+                        break;
+                    default:
+                        tipo = 'info';
+                }
+                agregarToast(tipo, '{{ message.tags|title }}', '{{ message }}', true);
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
+
+    <!-- Contenido principal -->
+    <main class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Pie de página -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo-text">
+                <img src="{% static 'images/logo.png' %}" alt="" class="footer-logo">
+                <div class="footer-text">
+                    <p id="buap-text">RadarCultural </p>
+                    <p>Correo: zomserch.s@gmail.com</p>
+                    <p>Teléfono: 221 530 1521</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/notifications.js' %}"></script>
+    <script src="{% static 'js/pass.js' %}"></script>
+    <script src="{% static 'js/menu.js' %}"></script>
+    {% block extrascripts %}{% endblock %}
+</body>
+</html>

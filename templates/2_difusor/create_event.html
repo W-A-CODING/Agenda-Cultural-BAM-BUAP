@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Crear Evento - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Crear Nuevo Evento</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label for="{{ form.titulo.id_for_label }}">Título:</label>
+        {{ form.titulo }}
+        {{ form.titulo.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.disciplina.id_for_label }}">Disciplina Artística:</label>
+        {{ form.disciplina }}
+        {{ form.disciplina.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.descripcion.id_for_label }}">Descripción:</label>
+        {{ form.descripcion }}
+        {{ form.descripcion.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.imagen.id_for_label }}">Imagen:</label>
+        {{ form.imagen }}
+        {{ form.imagen.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.clasificacion_edad.id_for_label }}">Clasificación de Edad:</label>
+        {{ form.clasificacion_edad }}
+        {{ form.clasificacion_edad.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.fecha_evento.id_for_label }}">Fecha y Hora del Evento:</label>
+        {{ form.fecha_evento }}
+        {{ form.fecha_evento.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.lugar.id_for_label }}">Lugar:</label>
+        {{ form.lugar }}
+        {{ form.lugar.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.horario.id_for_label }}">Horario:</label>
+        {{ form.horario }}
+        {{ form.horario.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.precio.id_for_label }}">Precio:</label>
+        {{ form.precio }}
+        {{ form.precio.errors }}
+    </div>
+    
+    <div>
+        {{ form.es_gratuito }}
+        <label for="{{ form.es_gratuito.id_for_label }}">Evento Gratuito</label>
+    </div>
+    
+    <button type="submit">Crear Evento</button>
+    <a href="{% url 'perfil_difusor' %}">Cancelar</a>
+</form>
+{% endblock %}

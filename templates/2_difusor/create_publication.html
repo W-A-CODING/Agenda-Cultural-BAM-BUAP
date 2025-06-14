@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Crear Publicación - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Crear Nueva Publicación</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label for="{{ form.titulo.id_for_label }}">Título:</label>
+        {{ form.titulo }}
+        {{ form.titulo.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.disciplina.id_for_label }}">Disciplina Artística:</label>
+        {{ form.disciplina }}
+        {{ form.disciplina.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.descripcion.id_for_label }}">Descripción:</label>
+        {{ form.descripcion }}
+        {{ form.descripcion.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.imagen.id_for_label }}">Imagen:</label>
+        {{ form.imagen }}
+        {{ form.imagen.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.clasificacion_edad.id_for_label }}">Clasificación de Edad:</label>
+        {{ form.clasificacion_edad }}
+        {{ form.clasificacion_edad.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.link.id_for_label }}">Link (opcional):</label>
+        {{ form.link }}
+        {{ form.link.errors }}
+    </div>
+    
+    <div>
+        <label for="{{ form.fecha_publicacion.id_for_label }}">Fecha de Publicación:</label>
+        {{ form.fecha_publicacion }}
+        {{ form.fecha_publicacion.errors }}
+    </div>
+    
+    <button type="submit">Crear Publicación</button>
+    <a href="{% url 'perfil_difusor' %}">Cancelar</a>
+</form>
+{% endblock %}

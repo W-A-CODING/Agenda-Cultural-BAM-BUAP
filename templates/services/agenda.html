@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Agenda - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Agenda Semanal</h2>
+<p>Semana del {{ inicio_semana|date:"d/m/Y" }} al {{ fin_semana|date:"d/m/Y" }}</p>
+
+<div id="calendario-semanal">
+    {% regroup eventos_semana by fecha_evento.date as eventos_por_dia %}
+    {% for dia in eventos_por_dia %}
+    <div>
+        <h3>{{ dia.grouper|date:"l d/m/Y" }}</h3>
+        {% for evento in dia.list %}
+        <div>
+            <h4>{{ evento.titulo }}</h4>
+            <p>{{ evento.horario }} - {{ evento.lugar }}</p>
+            <p>{{ evento.difusor.nombre_entidad }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% empty %}
+    <p>No hay eventos esta semana</p>
+    {% endfor %}
+</div>
+
+<p>
+    <a href="{% url 'agenda_mes' inicio_semana.year inicio_semana.month %}">Ver calendario mensual</a>
+</p>
+{% endblock %}

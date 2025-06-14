@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% load custom_filters %}
+
+{% block title %}Publicaciones - RadarCultural{% endblock %}
+
+<!-- CSS específicos --> 
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/publications_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Publicaciones</h2>
+
+{% if user.is_authenticated %}
+<div>
+    <p>Las publicaciones de tus artistas seguidos y lugares suscritos aparecen primero</p>
+</div>
+{% endif %}
+
+<section class="search">
+    <div class="search-header">
+        <h3>Buscar y Filtrar</h3>
+    </div>
+    <div class="search-form-container">
+        <form method="get" id="form-filtros">
+            <div class="search-title">
+                <label for="busqueda">Buscar:</label>
+                <input type="text" 
+                       name="busqueda" 
+                       id="busqueda" 
+                       placeholder="Título, descripción o autor..." 
+                       value="{{ busqueda_actual }}">
+            </div>
+            
+            <div class="search-discipline">
+                <label for="disciplina">Disciplina:</label>
+                <select name="disciplina" id="disciplina">
+                    <option value="">Todas las disciplinas</option>
+                    {% for disc in disciplinas %}
+                    <option value="{{ disc.nombre }}" 
+                            {% if filtros_activos.disciplina == disc.nombre %}selected{% endif %}>
+                        {{ disc.get_nombre_display }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="search-classification">
+                <label for="clasificacion">Clasificación de edad:</label>
+                <select name="clasificacion" id="clasificacion">
+                    <option value="">Todas las edades</option>
+                    <option value="todo_publico" 
+                            {% if filtros_activos.clasificacion == 'todo_publico' %}selected{% endif %}>
+                        Todo Público
+                    </option>
+                    <option value="infantil" 
+                            {% if filtros_activos.clasificacion == 'infantil' %}selected{% endif %}>
+                        Infantil
+                    </option>
+                    <option value="adolescentes" 
+                            {% if filtros_activos.clasificacion == 'adolescentes' %}selected{% endif %}>
+                        Adolescentes
+                    </option>
+                    <option value="adultos" 
+                            {% if filtros_activos.clasificacion == 'adultos' %}selected{% endif %}>
+                        Adultos
+                    </option>
+                    <option value="mayores" 
+                            {% if filtros_activos.clasificacion == 'mayores' %}selected{% endif %}>
+                        Adultos Mayores
+                    </option>
+                </select>
+            </div>
+            
+            <div class="search-buttons">
+                <button type="submit" class="btn-apply-changes">Aplicar Filtros</button>
+                <a href="{% url 'lista_publicaciones' %}" class="btn-clean-filters">Limpiar Filtros</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section>
+    <h3>Publicaciones Encontradas</h3>
+    
+    {% if busqueda_actual or filtros_activos.disciplina or filtros_activos.clasificacion %}
+    <p>
+        Mostrando resultados
+        {% if busqueda_actual %}para "{{ busqueda_actual }}"{% endif %}
+        {% if filtros_activos.disciplina %}en {{ filtros_activos.disciplina }}{% endif %}
+        {% if filtros_activos.clasificacion %}para {{ filtros_activos.clasificacion }}{% endif %}
+    </p>
+    {% endif %}
+    
+    <div id="lista-publicaciones">
+        {% for publicacion in page_obj %}
+        <article>
+            <div>
+                {% if publicacion.imagen %}
+                <img src="{{ publicacion.imagen.url }}" alt="{{ publicacion.titulo }}">
+                {% endif %}
+            </div>
+            
+            <div>
+                <h4>{{ publicacion.titulo }}</h4>
+                
+                <div>
+                    <span>Por: {{ publicacion.difusor.nombre_entidad }}</span>
+                    <span> | </span>
+                    <span>{{ publicacion.difusor.get_tipo_difusor_display }}</span>
+                </div>
+                
+                <p>{{ publicacion.descripcion|truncatewords:30 }}</p>
+                
+                <div>
+                    <span>{{ publicacion.disciplina.get_nombre_display }}</span>
+                    <span> | </span>
+                    <span>{{ publicacion.get_clasificacion_edad_display }}</span>
+                    <span> | </span>
+                    <span>{{ publicacion.fecha_publicacion|date:"d/m/Y" }}</span>
+                </div>
+                
+                <div>
+                    <a href="{% url 'detalle_difusor' publicacion.difusor.id %}">Ver perfil del autor</a>
+                    {% if publicacion.link %}
+                    <span> | </span>
+                    <a href="{{ publicacion.link }}" target="_blank">Enlace externo</a>
+                    {% endif %}
+                </div>
+                
+                {% if user.is_authenticated %}
+                    {% if publicacion.difusor.id in suscripciones_y_gustos %}
+                    <div>
+                        <small>⭐ De tus suscripciones</small>
+                    </div>
+                    {% elif publicacion.disciplina in user.preferencias.disciplinas_interes.all %}
+                    <div>
+                        <small>♥ De tus disciplinas favoritas</small>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </article>
+        {% empty %}
+        <p>No se encontraron publicaciones con los filtros seleccionados.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Paginación -->
+<div>
+    <span>
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if busqueda_actual %}&busqueda={{ busqueda_actual }}{% endif %}{% if filtros_activos.disciplina %}&disciplina={{ filtros_activos.disciplina }}{% endif %}{% if filtros_activos.clasificacion %}&clasificacion={{ filtros_activos.clasificacion }}{% endif %}">&laquo; Primera</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if busqueda_actual %}&busqueda={{ busqueda_actual }}{% endif %}{% if filtros_activos.disciplina %}&disciplina={{ filtros_activos.disciplina }}{% endif %}{% if filtros_activos.clasificacion %}&clasificacion={{ filtros_activos.clasificacion }}{% endif %}">Anterior</a>
+        {% endif %}
+        
+        <span>
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+        
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if busqueda_actual %}&busqueda={{ busqueda_actual }}{% endif %}{% if filtros_activos.disciplina %}&disciplina={{ filtros_activos.disciplina }}{% endif %}{% if filtros_activos.clasificacion %}&clasificacion={{ filtros_activos.clasificacion }}{% endif %}">Siguiente</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if busqueda_actual %}&busqueda={{ busqueda_actual }}{% endif %}{% if filtros_activos.disciplina %}&disciplina={{ filtros_activos.disciplina }}{% endif %}{% if filtros_activos.clasificacion %}&clasificacion={{ filtros_activos.clasificacion }}{% endif %}">Última &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

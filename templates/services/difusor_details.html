@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}{{ difusor.nombre_entidad }} - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>{{ difusor.nombre_entidad }}</h2>
+
+<section>
+    {% if difusor.imagen_perfil %}
+    <img src="{{ difusor.imagen_perfil.url }}" alt="{{ difusor.nombre_entidad }}">
+    {% endif %}
+    
+    <p><strong>Tipo:</strong> {{ difusor.get_tipo_difusor_display }}</p>
+    <p>{{ difusor.descripcion }}</p>
+    
+    {% if difusor.direccion %}
+    <p><strong>Dirección:</strong> {{ difusor.direccion }}</p>
+    {% endif %}
+    
+    {% if difusor.telefono %}
+    <p><strong>Teléfono:</strong> {{ difusor.telefono }}</p>
+    {% endif %}
+    
+    {% if difusor.sitio_web %}
+    <p><strong>Sitio web:</strong> <a href="{{ difusor.sitio_web }}" target="_blank">{{ difusor.sitio_web }}</a></p>
+    {% endif %}
+    
+    {% if user.is_authenticated %}
+        {% if difusor.tipo_difusor in 'lugar,organizacion' %}
+            <button onclick="toggleSuscripcion({{ difusor.id }})">
+                {% if es_suscriptor %}Desuscribirse{% else %}Suscribirse{% endif %}
+            </button>
+        {% else %}
+            <button onclick="toggleSuscripcion({{ difusor.id }})">
+                {% if es_seguidor %}Dejar de seguir{% else %}Seguir{% endif %}
+            </button>
+        {% endif %}
+    {% endif %}
+</section>
+
+{% if eventos %}
+<section>
+    <h3>Próximos Eventos</h3>
+    {% for evento in eventos %}
+    <article>
+        <h4>{{ evento.titulo }}</h4>
+        <p>{{ evento.fecha_evento|date:"d/m/Y H:i" }}</p>
+        <p>{{ evento.lugar }}</p>
+        <p>{{ evento.descripcion|truncatewords:30 }}</p>
+    </article>
+    {% endfor %}
+</section>
+{% endif %}
+
+{% if publicaciones %}
+<section>
+    <h3>Publicaciones</h3>
+    {% for publicacion in publicaciones %}
+    <article>
+        <h4>{{ publicacion.titulo }}</h4>
+        <p>{{ publicacion.fecha_publicacion|date:"d/m/Y" }}</p>
+        <p>{{ publicacion.descripcion|truncatewords:30 }}</p>
+        {% if publicacion.link %}
+        <a href="{{ publicacion.link }}" target="_blank">Ver más</a>
+        {% endif %}
+    </article>
+    {% endfor %}
+</section>
+{% endif %}
+
+<script>
+function toggleSuscripcion(difusorId) {
+    fetch(`/difusor/${difusorId}/suscribir/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        location.reload();
+    });
+}
+</script>
+{% endblock %}

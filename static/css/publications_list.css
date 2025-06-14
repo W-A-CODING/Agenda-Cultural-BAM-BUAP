@@ -1,0 +1,98 @@
+.search {
+    margin: 2rem auto;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.search-header {
+    background-color: #1D3557;
+    color: #FAF3DD;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.search-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.search-form-container {
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    border: 1px solid rgba(29, 53, 87, 0.1);
+}
+
+.search-title,
+.search-discipline,
+.search-classification {
+    margin-bottom: 2rem;
+}
+
+.search-title label,
+.search-discipline label,
+.search-classification label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #1D3557;
+    font-weight: bold;
+}
+
+.search-title input,
+.search-discipline select,
+.search-classification select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #1D3557;
+    border-radius: 12px;  /* Más redondeado */
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+.search-title input:focus,
+.search-discipline select:focus,
+.search-classification select:focus {
+    outline: none;
+    border-color: #F77F00;
+}
+
+.search-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    justify-content: center;
+}
+
+.btn-apply-changes,
+.btn-clean-filters {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    min-width: 160px;  /* Ancho fijo para ambos botones */
+    text-align: center;
+}
+
+.btn-apply-changes {
+    background-color: #F77F00;
+    color: #FAF3DD;
+}
+
+.btn-clean-filters {
+    background-color: #D62828;
+    color: #FAF3DD;
+}
+
+.btn-apply-changes:hover,
+.btn-clean-filters:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Agenda Mensual - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Agenda - {{ month }}/{{ year }}</h2>
+
+<div>
+    <a href="{% url 'agenda_mes' year month|add:"-1" %}">Mes Anterior</a>
+    <a href="{% url 'agenda' %}">Vista Semanal</a>
+    <a href="{% url 'agenda_mes' year month|add:"1" %}">Mes Siguiente</a>
+</div>
+
+<div id="calendario-mensual">
+    {% regroup eventos_mes by fecha_evento.date as eventos_por_dia %}
+    {% for dia in eventos_por_dia %}
+    <div>
+        <h3>{{ dia.grouper|date:"d/m/Y - l" }}</h3>
+        {% for evento in dia.list %}
+        <div>
+            <h4>{{ evento.titulo }}</h4>
+            <p>{{ evento.horario }} - {{ evento.lugar }}</p>
+            <p>{{ evento.difusor.nombre_entidad }}</p>
+            <a href="{% url 'detalle_difusor' evento.difusor.id %}">Ver más</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% empty %}
+    <p>No hay eventos este mes</p>
+    {% endfor %}
+</div>
+{% endblock %}

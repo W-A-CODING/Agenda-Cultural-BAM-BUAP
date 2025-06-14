@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Revisar Solicitud - Admin{% endblock %}
+
+{% block content %}
+<h2>Revisar Solicitud de Difusor</h2>
+
+<div>
+    <h3>Información del Solicitante</h3>
+    <p><strong>Usuario:</strong> {{ solicitud.usuario.username }}</p>
+    <p><strong>Email:</strong> {{ solicitud.usuario.email }}</p>
+    <p><strong>Tipo de Difusor:</strong> {{ solicitud.get_tipo_difusor_display }}</p>
+    <p><strong>Nombre de la Entidad:</strong> {{ solicitud.nombre_entidad }}</p>
+    <p><strong>Descripción:</strong> {{ solicitud.descripcion }}</p>
+    <p><strong>Teléfono:</strong> {{ solicitud.telefono }}</p>
+    <p><strong>Dirección:</strong> {{ solicitud.direccion|default:"No proporcionada" }}</p>
+    <p><strong>Sitio Web:</strong> {{ solicitud.sitio_web|default:"No proporcionado" }}</p>
+    <p><strong>Fecha de Solicitud:</strong> {{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</p>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="comentarios">Comentarios (opcional):</label>
+        <textarea name="comentarios" id="comentarios" rows="4"></textarea>
+    </div>
+    
+    <button type="submit" name="accion" value="aprobar">Aprobar</button>
+    <button type="submit" name="accion" value="rechazar">Rechazar</button>
+    <a href="{% url 'admin_solicitudes' %}">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Solicitudes de Difusor - Admin{% endblock %}
+
+{% block content %}
+<h2>Solicitudes de Difusor Pendientes</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Tipo</th>
+            <th>Nombre Entidad</th>
+            <th>Fecha Solicitud</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for solicitud in solicitudes %}
+        <tr>
+            <td>{{ solicitud.usuario.username }}</td>
+            <td>{{ solicitud.get_tipo_difusor_display }}</td>
+            <td>{{ solicitud.nombre_entidad }}</td>
+            <td>{{ solicitud.fecha_solicitud|date:"d/m/Y" }}</td>
+            <td>
+                <a href="{% url 'aprobar_solicitud' solicitud.id %}">Revisar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No hay solicitudes pendientes</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

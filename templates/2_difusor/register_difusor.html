@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Solicitud de Difusor - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Solicitud para ser Difusor</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enviar Solicitud</button>
+</form>
+
+<p>Tu solicitud será revisada por un administrador. Te notificaremos cuando sea aprobada.</p>
+{% endblock %}

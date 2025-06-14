@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Mi Perfil Difusor - RadarCultural{% endblock %}
+
+{% block content %}
+<h2>Mi Perfil de Difusor</h2>
+
+<section>
+    <h3>Información del Perfil</h3>
+    <p><strong>Nombre:</strong> {{ perfil.nombre_entidad }}</p>
+    <p><strong>Tipo:</strong> {{ perfil.get_tipo_difusor_display }}</p>
+    <p><strong>Descripción:</strong> {{ perfil.descripcion }}</p>
+    <p><strong>Teléfono:</strong> {{ perfil.telefono }}</p>
+    {% if perfil.direccion %}
+    <p><strong>Dirección:</strong> {{ perfil.direccion }}</p>
+    {% endif %}
+    {% if perfil.sitio_web %}
+    <p><strong>Sitio Web:</strong> <a href="{{ perfil.sitio_web }}" target="_blank">{{ perfil.sitio_web }}</a></p>
+    {% endif %}
+</section>
+
+{% if perfil.puede_crear_eventos %}
+<section>
+    <h3>Mis Eventos</h3>
+    <a href="{% url 'crear_evento' %}">Crear Nuevo Evento</a>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evento in eventos %}
+            <tr>
+                <td>{{ evento.titulo }}</td>
+                <td>{{ evento.fecha_evento|date:"d/m/Y H:i" }}</td>
+                <td>{% if evento.aprobado %}Aprobado{% else %}Pendiente{% endif %}</td>
+                <td>Ver | Editar</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No has creado eventos aún</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %}
+
+<section>
+    <h3>Mis Publicaciones</h3>
+    <a href="{% url 'crear_publicacion' %}">Crear Nueva Publicación</a>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for publicacion in publicaciones %}
+            <tr>
+                <td>{{ publicacion.titulo }}</td>
+                <td>{{ publicacion.fecha_publicacion|date:"d/m/Y" }}</td>
+                <td>{% if publicacion.aprobado %}Aprobada{% else %}Pendiente{% endif %}</td>
+                <td>Ver | Editar</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No has creado publicaciones aún</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
