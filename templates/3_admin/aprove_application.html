@@ -4,31 +4,74 @@
 
 {% block title %}Revisar Solicitud - Admin{% endblock %}
 
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/3_admin/aprove_application.css' %}">
+{% endblock %}
+
 {% block content %}
-<h2>Revisar Solicitud de Difusor</h2>
+<div class="review-container">
+    <div class="info-section">
+        <h3>Información del Solicitante</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Usuario</div>
+                <div class="info-value">{{ solicitud.usuario.username }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ solicitud.usuario.email }}</div>
+            </div>
 
-<div>
-    <h3>Información del Solicitante</h3>
-    <p><strong>Usuario:</strong> {{ solicitud.usuario.username }}</p>
-    <p><strong>Email:</strong> {{ solicitud.usuario.email }}</p>
-    <p><strong>Tipo de Difusor:</strong> {{ solicitud.get_tipo_difusor_display }}</p>
-    <p><strong>Nombre de la Entidad:</strong> {{ solicitud.nombre_entidad }}</p>
-    <p><strong>Descripción:</strong> {{ solicitud.descripcion }}</p>
-    <p><strong>Teléfono:</strong> {{ solicitud.telefono }}</p>
-    <p><strong>Dirección:</strong> {{ solicitud.direccion|default:"No proporcionada" }}</p>
-    <p><strong>Sitio Web:</strong> {{ solicitud.sitio_web|default:"No proporcionado" }}</p>
-    <p><strong>Fecha de Solicitud:</strong> {{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</p>
-</div>
+            <div class="info-item">
+                <div class="info-label">Tipo de Difusor</div>
+                <div class="info-value">{{ solicitud.get_tipo_difusor_display }}</div>
+            </div>
 
-<form method="post">
-    {% csrf_token %}
-    <div>
-        <label for="comentarios">Comentarios (opcional):</label>
-        <textarea name="comentarios" id="comentarios" rows="4"></textarea>
+            <div class="info-item">
+                <div class="info-label">Nombre de la Entidad</div>
+                <div class="info-value">{{ solicitud.nombre_entidad }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Descripción</div>
+                <div class="info-value">{{ solicitud.descripcion }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Teléfono</div>
+                <div class="info-value">{{ solicitud.telefono }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Dirección</div>
+                <div class="info-value">{{ solicitud.direccion|default:"No proporcionada" }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Sitio Web</div>
+                <div class="info-value">{{ solicitud.sitio_web|default:"No proporcionado" }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Fecha de Solicitud</div>
+                <div class="info-value">{{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</div>
+            </div>
+        </div>
     </div>
-    
-    <button type="submit" name="accion" value="aprobar">Aprobar</button>
-    <button type="submit" name="accion" value="rechazar">Rechazar</button>
-    <a href="{% url 'admin_solicitudes' %}">Cancelar</a>
-</form>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="comments-section">
+            <label for="comentarios">Comentarios (opcional)</label>
+            <textarea name="comentarios" id="comentarios" rows="4"></textarea>
+        </div>
+        
+        <div class="action-buttons">
+            <button type="submit" name="accion" value="aprobar">Aprobar Solicitud</button>
+            <button type="submit" name="accion" value="rechazar">Rechazar Solicitud</button>
+            <a href="{% url 'admin_solicitudes' %}">Volver</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

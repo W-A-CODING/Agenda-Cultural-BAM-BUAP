@@ -4,36 +4,55 @@
 
 {% block title %}Inicio - RadarCultural{% endblock %}
 
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<script src="{% static 'js/carousel.js' %}" defer></script>
+{% endblock %}
+
 {% block content %}
-<h2>Bienvenido a RadarCultural</h2>
+<section class="hero">
+    <h2>Bienvenido a </h2> <image class="logo" src="{% static 'images/logo.png' %}" alt="Logo">
+    <p>Descubre los eventos culturales más destacados de Puebla</p>
+</section>
+
+<section class="carousel-section">
+    <div id="carousel">
+        {% for evento in eventos_carousel %}
+        <div {% if forloop.first %}class="active"{% endif %}>
+            <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}">
+            <div class="event-info">
+                <h4>{{ evento.titulo }}</h4>
+                <p>{{ evento.fecha_evento|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="active">
+            <img src="{% static 'images/default-event.jpg' %}" alt="No hay eventos">
+            <div class="event-info">
+                <h4>No hay eventos disponibles</h4>
+                <p>Próximamente más eventos</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
 
 {% if not user.is_authenticated %}
-<section>
-    <p>Descubre eventos culturales en Puebla</p>
-    <a href="{% url 'registro' %}">Regístrate</a>
-    <a href="{% url 'login' %}">Inicia Sesión</a>
+<section class="cta-section">
+    <h3>¡Únete a nuestra comunidad cultural!</h3>
+    <p>Regístrate para estar al tanto de los mejores eventos culturales en Puebla</p>
+    <div class="cta-buttons">
+        <a href="{% url 'registro' %}" class="cta-button">Regístrate</a>
+        <a href="{% url 'login' %}" class="cta-button">Inicia Sesión</a>
+    </div>
 </section>
 {% endif %}
 
 {% if user.is_authenticated and user.tipo_usuario in 'general,estudiante' %}
-<section>
-    <p>¿Eres un difusor cultural?</p>
-    <a href="{% url 'registro_difusor' %}">Solicita ser Difusor</a>
+<section class="cta-section">
+    <h3>¿Eres un difusor cultural?</h3>
+    <p>Comparte tus eventos con nuestra comunidad y llega a más personas</p>
+    <a href="{% url 'registro_difusor' %}" class="cta-button">Solicita ser Difusor</a>
 </section>
 {% endif %}
-
-<section>
-    <h3>Próximos Eventos</h3>
-    <div id="carousel">
-        {% for evento in eventos_carousel %}
-        <div>
-            <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}">
-            <h4>{{ evento.titulo }}</h4>
-            <p>{{ evento.fecha_evento|date:"d/m/Y H:i" }}</p>
-        </div>
-        {% empty %}
-        <p>No hay eventos disponibles</p>
-        {% endfor %}
-    </div>
-</section>
 {% endblock %}

@@ -17,7 +17,7 @@
             {% endif %}
             <h4>{{ lugar.nombre }}</h4>
             {% if lugar.coordenadas %}
-            <a href="https://www.google.com/maps/search/?api=1&query={{ lugar.coordenadas }}" target="_blank">Ver en Google Maps</a>
+            <a href="https://maps.google.com/?q={{ lugar.coordenadas }}" target="_blank">Ver en Google Maps</a>
             {% endif %}
         </article>
         {% empty %}

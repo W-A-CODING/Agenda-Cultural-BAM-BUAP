@@ -1,70 +1,102 @@
-{% extends "base.html" %}
 
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Mi Perfil - RadarCultural{% endblock %}
 
 {% block content %}
-<h2>Mi Perfil</h2>
+<div class="perfil-container animate-fade-in">
 
-<section>
-    <h3>Información Personal</h3>
-    <p><strong>Usuario:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Tipo de cuenta:</strong> {{ user.get_tipo_usuario_display }}</p>
-    <p><strong>Recibe novedades:</strong> {% if user.recibir_novedades %}Sí{% else %}No{% endif %}</p>
-</section>
+    <h2>Mi Perfil</h2>
+    <h3 class="titulo">Información Personal</h3>
+    <section class="Personal-Info">
+        <p><strong>Usuario:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Tipo de cuenta:</strong> {{ user.get_tipo_usuario_display }}</p>
+        <p><strong>Recibe novedades:</strong> {% if user.recibir_novedades %}Sí{% else %}No{% endif %}</p>
+    </section>
 
-<section>
-    <h3>Mis Preferencias</h3>
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            <label>Disciplinas de interés:</label>
-            {{ form.disciplinas_interes }}
-        </div>
-        
-        <div>
-            <label>Clasificaciones de edad preferidas:</label>
-            {{ form.clasificaciones_edad }}
-        </div>
-        
-        <button type="submit">Guardar Preferencias</button>
-    </form>
-</section>
+    <section class="preferencias">
+        <h3 class="titulo">Mis Preferencias</h3>
+        <form method="post">
+            {% csrf_token %}
 
-<section>
-    <h3>Mis Suscripciones</h3>
-    {% if suscripciones %}
-    <ul>
-        {% for suscripcion in suscripciones %}
-        <li>
-            {{ suscripcion.difusor.nombre_entidad }} 
-            ({{ suscripcion.difusor.get_tipo_difusor_display }})
-            - Desde {{ suscripcion.fecha_suscripcion|date:"d/m/Y" }}
-            <a href="{% url 'detalle_difusor' suscripcion.difusor.id %}">Ver perfil</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No tienes suscripciones a lugares u organizaciones</p>
-    {% endif %}
-</section>
+            <div class="tabla-preferencias-container">
+                <div class="tabla-preferencias-bloque">
+                    <h4>Disciplinas de interés:</h4>
+                    <table class="tabla-preferencias">
+                        {% for checkbox in form.disciplinas_interes %}
+                        <tr>
+                            <td>{{ checkbox.choice_label }}</td>
+                            <td>{{ checkbox.tag }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
 
-<section>
-    <h3>Artistas que Sigo</h3>
-    {% if gustos %}
-    <ul>
-        {% for gusto in gustos %}
-        <li>
-            {{ gusto.artista.nombre_entidad }}
-            - Desde {{ gusto.fecha_gusto|date:"d/m/Y" }}
-            <a href="{% url 'detalle_difusor' gusto.artista.id %}">Ver perfil</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No sigues a ningún artista</p>
-    {% endif %}
-</section>
+                <div class="tabla-preferencias-bloque">
+                    <h4>Edad preferidas:</h4>
+                    <table class="tabla-preferencias">
+                        {% for checkbox in form.clasificaciones_edad %}
+                        <tr>
+                            <td>{{ checkbox.choice_label }}</td>
+                            <td>{{ checkbox.tag }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+            <div class="checkbox-personalizado">
+                {{ form.recibir_novedades }}
+                <label for="{{ form_usuario.recibir_novedades.id_for_label }}">
+                    {{ form.recibir_novedades.label }}
+                </label>
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit" class="GuardarBtn">Guardar Preferencias</button>
+            </div>
+        </form>
+    </section>
+
+
+    <section>
+            <h3 class="titulo">Mis Suscripciones</h3>
+                <div style="text-align: center;">
+                    {% if suscripciones %}
+                    <ul>
+                        {% for suscripcion in suscripciones %}
+                        <li>
+                            {{ suscripcion.difusor.nombre_entidad }} 
+                            ({{ suscripcion.difusor.get_tipo_difusor_display }})
+                            - Desde {{ suscripcion.fecha_suscripcion|date:"d/m/Y" }}
+                            <a href="{% url 'detalle_difusor' suscripcion.difusor.id %}">Ver perfil</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                        <p>No tienes suscripciones a lugares u organizaciones</p>
+                    {% endif %}
+                </div>
+    </section>
+
+    <section>
+        <h3 class="titulo">Artistas que Sigo</h3>
+            <div style="text-align: center;">
+                {% if gustos %}
+                <ul>
+                    {% for gusto in gustos %}
+                    <li>
+                        {{ gusto.artista.nombre_entidad }}
+                        - Desde {{ gusto.fecha_gusto|date:"d/m/Y" }}
+                        <a href="{% url 'detalle_difusor' gusto.artista.id %}">Ver perfil</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No sigues a ningún artista</p>
+                {% endif %}
+            </div>
+    </section>
 {% endblock %}

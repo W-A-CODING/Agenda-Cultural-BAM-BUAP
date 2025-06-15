@@ -74,6 +74,7 @@
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: var(--cream);
+    background-image: url('../images/fondo 1.png');
     color: var(--navy);
     line-height: 1.6;
 }
@@ -175,6 +176,133 @@ body {
     display: none;
 }
 
+
+/* Estilo del checkbox y su texto */
+.form-check {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: var(--navy);
+}
+
+.form-check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--green); 
+    cursor: pointer;
+}
+
+.form-check label {
+    cursor: pointer;
+}
+
+.titulo {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-top: 2rem;
+    color: var(--navy);
+}
+
+.Personal-Info {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: var(--navy);
+    line-height: 1.6;
+}
+
+.GuardarBtn {
+    display: block;
+    margin: 2rem auto;
+    font-size: 1rem;
+    color: var(--cream);
+    background-color: var(--navy);
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+/*perfil usuario*/
+.tabla-preferencias-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem;
+    margin: 2rem 0;
+}
+
+.tabla-preferencias-bloque {
+    flex: 1 1 300px;
+}
+
+.tabla-preferencias-bloque h4 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--navy);
+    text-align: center;
+}
+
+.tabla-preferencias {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-preferencias td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #ccc;
+    font-size: 0.95rem;
+}
+
+.tabla-preferencias td:first-child {
+    text-align: left;
+}
+
+.tabla-preferencias td:last-child {
+    text-align: center;
+}
+
+.tabla-preferencias input[type="checkbox"] {
+    transform: scale(1.1);
+    accent-color: var(--green);
+    cursor: pointer;
+}
+
+.checkbox-personalizado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    color: var(--navy);
+}
+
+/* Recibir novedades */
+.checkbox-personalizado {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--navy);
+}
+
+.checkbox-personalizado input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--green);
+    cursor: pointer;
+}
+
+
 .nav-admin a {
     color: var(--orange);
     font-weight: bold;
@@ -204,6 +332,7 @@ body {
     color: #ff4444;
     text-shadow: 0 0 8px rgba(255, 68, 68, 0.4);
 }
+
 
 /* Contenedor principal */
 .container {
@@ -242,6 +371,8 @@ button {
     background: var(--gradient-primary);
     color: var(--cream);
     border: none;
+    margin-top:1rem;
+    margin-bottom: 1rem;
     padding: 0.8rem 1.5rem;
     border-radius: 25px;
     font-weight: 500;
@@ -382,17 +513,48 @@ input:focus, textarea:focus, select:focus {
     100% { transform: rotate(360deg); }
 }
 
+
 /* Media Queries */
 @media (max-width: 768px) {
+    .navbar {
+        position: relative;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .menu-toggle {
-        display:  block;
+        display: block;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        color: var(--cream);
+        cursor: pointer;
+        z-index: 1100;
+    }
+
+    .navbar-right {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--gradient-primary);
+        width: 100%;
+        display: none;
+        padding: 1rem 2rem;
+        box-shadow: var(--shadow-strong);
+        z-index: 1000; 
+    }
+
+    .navbar-right.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
     }
 
     .navbar-right ul {
         flex-direction: column;
-        padding: 1rem 0;
+        gap: 1.2rem;
     }
-    
+
     .container {
         padding: 1rem;
     }

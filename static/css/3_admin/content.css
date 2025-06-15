@@ -1,0 +1,190 @@
+.content-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+section {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+}
+
+section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient-accent);
+}
+
+section h3 {
+    color: var(--navy);
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--orange);
+}
+
+/* Estilo de tabla mejorado */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.8rem;
+}
+
+thead tr {
+    background: var(--gradient-primary);
+    color: var(--cream);
+}
+
+thead th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 500;
+    border-radius: 0;
+}
+
+thead th:first-child {
+    border-radius: 8px 0 0 8px;
+}
+
+thead th:last-child {
+    border-radius: 0 8px 8px 0;
+}
+
+tbody tr {
+    background: #f8f9fa;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+tbody tr:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
+}
+
+tbody td {
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+tbody td:first-child {
+    border-left: 1px solid #e0e0e0;
+    border-radius: 8px 0 0 8px;
+}
+
+tbody td:last-child {
+    border-right: 1px solid #e0e0e0;
+    border-radius: 0 8px 8px 0;
+}
+
+/* Estilos para botones de acción */
+form button {
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+form button:hover {
+    background: var(--light-green);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Mensaje cuando no hay contenido */
+tr:only-child td {
+    text-align: center;
+    padding: 2rem;
+    color: var(--navy);
+    font-style: italic;
+}
+
+/* Badges para estados */
+.estado-pendiente {
+    background: var(--orange);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+section {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+section:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+/* Media Queries */
+@media (max-width: 968px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .content-container {
+        padding: 1rem;
+    }
+
+    section {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+
+    tbody td {
+        display: block;
+        text-align: right;
+        padding: 0.8rem;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 1rem;
+        width: 45%;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    form button {
+        width: 100%;
+    }
+}

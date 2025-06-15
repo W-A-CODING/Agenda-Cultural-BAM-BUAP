@@ -1,0 +1,202 @@
+.agenda-dia {
+    margin-bottom: 3rem;
+    text-align: left;
+}
+
+.agenda-dia h3 {
+    font-size: 1.4rem;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+}
+
+.tarjeta-agenda {
+    display: flex;
+    background: #20395e;
+    border-radius: 20px;
+    box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    margin: 1rem auto;
+    max-width: 700px;
+    transition: transform 0.3s ease;
+}
+
+.tarjeta-agenda:hover {
+    transform: translateY(-4px);
+}
+
+.agenda-foto {
+    flex: 0 0 130px;
+    background-color: #0c192e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.agenda-foto img {
+    max-width: 150px; 
+    max-height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+
+.agenda-detalles {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.6rem;
+}
+
+.agenda-item {
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+}
+
+.agenda-switch {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.agenda-btn {
+    background-color: var(--navy);
+    color: var(--cream);
+    padding: 0.7rem 1.2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: opacity 0.3s ease;
+}
+
+.agenda-btn.inactive {
+    opacity: 0.3;
+}
+
+.agenda-btn.inactive:hover {
+    opacity: 1;
+}
+
+.agenda-separator {
+    color: var(--orange);
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.agenda-btn.disabled {
+    opacity: 0.2;
+    pointer-events: none;
+    cursor: default;
+}
+
+.calendario-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+
+.dia-nombre {
+    font-weight: bold;
+    text-align: center;
+    background-color: #374a66;
+    padding: 0.5rem;
+    color: white;
+}
+
+.celda-dia {
+    min-height: 100px;
+    padding: 0.5rem;
+    border: 1px solid #374a66;
+    position: relative;
+    background-color: #374a66;
+}
+
+.numero-dia {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    color: white;
+}
+
+.lista-eventos {
+    list-style: none;
+    padding: 0;
+    font-size: 0.85rem;
+}
+
+.vacio {
+    background-color: #f5f5f5;
+}
+
+.evento-item{
+    color: white;
+    font-size: 0.85rem;
+}
+
+.mes-navegacion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+.mes-titulo {
+    font-size: 2rem;
+    color: var(--navy);
+    text-align: center;
+    margin: 0;
+    flex: 1;
+}
+
+.mes-btn {
+    background-color: transparent;
+    color: var(--orange);
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+.mes-btn:hover {
+    color: var(--dark-orange);
+}
+
+.semana-navegacion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem auto;
+    max-width: 800px;
+}
+
+.semana-navegacion h3 {
+    margin: 0;
+    text-align: center;
+    flex: 1;
+}
+
+.semana-btn {
+    background-color: transparent;
+    color: var(--orange);
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+.semana-btn:hover {
+    color: var(--dark-orange);
+}

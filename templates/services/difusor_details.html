@@ -4,40 +4,48 @@
 
 {% block title %}{{ difusor.nombre_entidad }} - RadarCultural{% endblock %}
 
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/difusor_details.css' %}">
+{% endblock %}
+
 {% block content %}
 <h2>{{ difusor.nombre_entidad }}</h2>
 
-<section>
+<section class="data-difusor">
     {% if difusor.imagen_perfil %}
-    <img src="{{ difusor.imagen_perfil.url }}" alt="{{ difusor.nombre_entidad }}">
+    <div class="profile-image-container">
+        <img src="{{ difusor.imagen_perfil.url }}" alt="{{ difusor.nombre_entidad }}">
+    </div>
     {% endif %}
     
-    <p><strong>Tipo:</strong> {{ difusor.get_tipo_difusor_display }}</p>
-    <p>{{ difusor.descripcion }}</p>
-    
-    {% if difusor.direccion %}
-    <p><strong>Dirección:</strong> {{ difusor.direccion }}</p>
-    {% endif %}
-    
-    {% if difusor.telefono %}
-    <p><strong>Teléfono:</strong> {{ difusor.telefono }}</p>
-    {% endif %}
-    
-    {% if difusor.sitio_web %}
-    <p><strong>Sitio web:</strong> <a href="{{ difusor.sitio_web }}" target="_blank">{{ difusor.sitio_web }}</a></p>
-    {% endif %}
-    
-    {% if user.is_authenticated %}
-        {% if difusor.tipo_difusor in 'lugar,organizacion' %}
-            <button onclick="toggleSuscripcion({{ difusor.id }})">
-                {% if es_suscriptor %}Desuscribirse{% else %}Suscribirse{% endif %}
-            </button>
-        {% else %}
-            <button onclick="toggleSuscripcion({{ difusor.id }})">
-                {% if es_seguidor %}Dejar de seguir{% else %}Seguir{% endif %}
+    <div class="difusor-info">
+        <p><strong>Tipo</strong> {{ difusor.get_tipo_difusor_display }}</p>
+        <p>{{ difusor.descripcion }}</p>
+        
+        {% if difusor.direccion %}
+        <p><strong>Dirección</strong> {{ difusor.direccion }}</p>
+        {% endif %}
+        
+        {% if difusor.telefono %}
+        <p><strong>Teléfono</strong> {{ difusor.telefono }}</p>
+        {% endif %}
+        
+        {% if difusor.sitio_web %}
+        <p><strong>Sitio web</strong> <a href="{{ difusor.sitio_web }}" target="_blank">{{ difusor.sitio_web }}</a></p>
+        {% endif %}
+        
+        {% if user.is_authenticated %}
+            <button 
+                onclick="toggleSuscripcion({{ difusor.id }})"
+                class="suscription-button">
+                {% if difusor.tipo_difusor in 'lugar,organizacion' %}
+                    {% if es_suscriptor %}Desuscribirse{% else %}Suscribirse{% endif %}
+                {% else %}
+                    {% if es_seguidor %}Dejar de seguir{% else %}Seguir{% endif %}
+                {% endif %}
             </button>
         {% endif %}
-    {% endif %}
+    </div>
 </section>
 
 {% if eventos %}

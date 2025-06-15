@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" type="image/png" href="{% static '' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo_circle.png' %}">
     <title>{% block title %}RadarCultural{% endblock %}</title>
 
     <!-- Estilos  -->
@@ -30,7 +30,7 @@
             </a>
         </div>
 
-        <button class="menu-toggle">
+        <button class="menu-toggle">☰
             <span></span>
             <span></span>
             <span></span>
@@ -40,7 +40,7 @@
             <ul>
                 {% if user.tipo_usuario == 'general' or user.tipo_usuario == 'estudiante' or user.tipo_usuario == NULL %}
                     <li><a href="{% url 'index' %}">Inicio</a></li>
-                    <li><a href="{% url 'acerca_de' %}">Acerca de Nosotros</a></li>
+                    <li><a href="{% url 'acerca_de' %}">Nosotros</a></li>
                     <li><a href="{% url 'agenda' %}">Agenda</a></li>
                     <li><a href="{% url 'lista_eventos' %}">Eventos</a></li>
                     <li><a href="{% url 'lista_publicaciones' %}">Publicaciones</a></li>
@@ -107,10 +107,10 @@
     <footer>
         <div class="footer-content">
             <div class="footer-logo-text">
-                <img src="{% static 'images/logo.png' %}" alt="" class="footer-logo">
+                <img src="{% static 'images/logo_circle.png' %}" alt="" class="footer-logo">
                 <div class="footer-text">
                     <p id="buap-text">RadarCultural </p>
-                    <p>Correo: zomserch.s@gmail.com</p>
+                    <p>Correo: noreply@radarcultural.com.mx</p>
                     <p>Teléfono: 221 530 1521</p>
                 </div>
             </div>

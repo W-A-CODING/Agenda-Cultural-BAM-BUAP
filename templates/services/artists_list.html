@@ -25,9 +25,6 @@
 <div>
     {% for artista in page_obj %}
     <article>
-        {% if artista.imagen_perfil %}
-        <img src="{{ artista.imagen_perfil.url }}" alt="{{ artista.nombre_entidad }}">
-        {% endif %}
         <h3>{{ artista.nombre_entidad }}</h3>
         <p>{{ artista.descripcion|truncatewords:20 }}</p>
         <p>Disciplinas: {% for disc in artista.disciplinas.all %}{{ disc.get_nombre_display }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>

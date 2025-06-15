@@ -4,20 +4,44 @@
 
 {% block title %}Agenda - RadarCultural{% endblock %}
 
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/agenda.css' %}">
+{% endblock %}
+
 {% block content %}
-<h2>Agenda Semanal</h2>
-<p>Semana del {{ inicio_semana|date:"d/m/Y" }} al {{ fin_semana|date:"d/m/Y" }}</p>
+
+<div class="agenda-switch">
+    <a href="{% url 'agenda' %}" class="agenda-btn {% if vista == 'mensual' %}inactive{% endif %}">Agenda semanal</a>
+    <span class="agenda-separator">|</span>
+    <a href="{% url 'agenda_mes' year month %}" class="agenda-btn {% if vista == 'semanal' %}inactive{% endif %}">Agenda mensual</a>
+</div>
+
+    <div class="semana-navegacion">
+        <a class="semana-btn" href="{% url 'agenda_fecha' prev_year prev_month prev_day %}">← Semana anterior</a>
+        <h3>Semana del {{ inicio_semana|date:"d/m/Y" }} al {{ fin_semana|date:"d/m/Y" }}</h3>
+        <a class="semana-btn" href="{% url 'agenda_fecha' next_year next_month next_day %}">Semana siguiente →</a>
+    </div>
+
 
 <div id="calendario-semanal">
-    {% regroup eventos_semana by fecha_evento.date as eventos_por_dia %}
-    {% for dia in eventos_por_dia %}
-    <div>
-        <h3>{{ dia.grouper|date:"l d/m/Y" }}</h3>
-        {% for evento in dia.list %}
-        <div>
-            <h4>{{ evento.titulo }}</h4>
-            <p>{{ evento.horario }} - {{ evento.lugar }}</p>
-            <p>{{ evento.difusor.nombre_entidad }}</p>
+        {% regroup eventos_semana by fecha_evento.date as eventos_por_dia %}
+        {% for dia in eventos_por_dia %}
+  
+    <div class="agenda-dia">
+        <div style="text-align: center;">
+            <h3>{{ dia.grouper|date:"l d/m/Y" }}</h3>
+            {% for evento in dia.list %}
+        </div>
+        <div class="tarjeta-agenda">
+            <div class="agenda-foto">
+                <img src="{{ evento.imagen.url }}" alt="Imagen del evento">
+            </div>
+            <div class="agenda-detalles">
+                <div class="agenda-item">📅 <strong>Fecha:</strong> {{ evento.fecha_evento|date:"d/m/Y H:i" }}</div>
+                <div class="agenda-item">🎫 <strong>Título:</strong> {{ evento.titulo }}</div>
+                <div class="agenda-item">⏰ <strong>Horario:</strong> {{ evento.horario }}</div>
+                <div class="agenda-item">📍 <strong>Lugar:</strong> {{ evento.lugar }}</div>
+            </div>
         </div>
         {% endfor %}
     </div>
@@ -26,7 +50,4 @@
     {% endfor %}
 </div>
 
-<p>
-    <a href="{% url 'agenda_mes' inicio_semana.year inicio_semana.month %}">Ver calendario mensual</a>
-</p>
 {% endblock %}

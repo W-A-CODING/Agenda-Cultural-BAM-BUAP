@@ -1,34 +1,55 @@
 {% extends "base.html" %}
-
 {% load static %}
+{% load custom_filters %}
 
-{% block title %}Agenda Mensual - RadarCultural{% endblock %}
+{% block title %}Agenda Mensual - {{ nombre_mes }} {{ year }}{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/agenda.css' %}">
+{% endblock %}
 
 {% block content %}
-<h2>Agenda - {{ month }}/{{ year }}</h2>
+<div class="agenda-container">
+    <div class="agenda-switch">
+        <a href="{% url 'agenda' %}" class="agenda-btn {% if vista == 'mensual' %}inactive{% endif %}">Agenda semanal</a>
+        <span class="agenda-separator">|</span>
+        <a href="{% url 'agenda_mes' year month %}" class="agenda-btn {% if vista == 'semanal' %}inactive{% endif %}">Agenda mensual</a>
+    </div>
 
-<div>
-    <a href="{% url 'agenda_mes' year month|add:"-1" %}">Mes Anterior</a>
-    <a href="{% url 'agenda' %}">Vista Semanal</a>
-    <a href="{% url 'agenda_mes' year month|add:"1" %}">Mes Siguiente</a>
-</div>
+    <div class="mes-navegacion">
+        <a class="mes-btn" href="{% url 'agenda_mes' prev_year prev_month %}">← MES ANTERIOR</a>
+        <h2 class="mes-titulo">{{ nombre_mes }} {{ year }}</h2>
+        <a class="mes-btn" href="{% url 'agenda_mes' next_year next_month %}">SIGUIENTE MES →</a>
+    </div>
 
-<div id="calendario-mensual">
-    {% regroup eventos_mes by fecha_evento.date as eventos_por_dia %}
-    {% for dia in eventos_por_dia %}
-    <div>
-        <h3>{{ dia.grouper|date:"d/m/Y - l" }}</h3>
-        {% for evento in dia.list %}
-        <div>
-            <h4>{{ evento.titulo }}</h4>
-            <p>{{ evento.horario }} - {{ evento.lugar }}</p>
-            <p>{{ evento.difusor.nombre_entidad }}</p>
-            <a href="{% url 'detalle_difusor' evento.difusor.id %}">Ver más</a>
-        </div>
+    <div class="calendario-grid">
+        <div class="dia-nombre">Lun</div>
+        <div class="dia-nombre">Mar</div>
+        <div class="dia-nombre">Mié</div>
+        <div class="dia-nombre">Jue</div>
+        <div class="dia-nombre">Vie</div>
+        <div class="dia-nombre">Sáb</div>
+        <div class="dia-nombre">Dom</div>
+
+        {% for semana in calendario %}
+            {% for dia in semana %}
+                <div class="celda-dia {% if dia == 0 %}vacio{% else %}con-eventos{% endif %}">
+                    {% if dia != 0 %}
+                        <div class="numero-dia">{{ dia }}</div>
+                        {% if eventos_por_dia|get_item:dia %}
+                            <div class="eventos-dia">
+                                {% for evento in eventos_por_dia|get_item:dia %}
+                                    <a href="{% url 'detalle_evento' evento.id %}" class="evento-item"> 
+                                        <span class="evento-hora">{{ evento.hora }}</span>
+                                        <span class="evento-titulo">{{ evento.titulo }}</span>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
         {% endfor %}
     </div>
-    {% empty %}
-    <p>No hay eventos este mes</p>
-    {% endfor %}
 </div>
 {% endblock %}

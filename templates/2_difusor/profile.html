@@ -4,82 +4,197 @@
 
 {% block title %}Mi Perfil Difusor - RadarCultural{% endblock %}
 
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/2_difusor/profile.css' %}">
+{% endblock %}
+
 {% block content %}
 <h2>Mi Perfil de Difusor</h2>
 
-<section>
+<section class="edit-content">
+    <h3>Editar Información del Perfil</h3>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Imagen de perfil actual -->
+        {% if perfil.imagen %}
+        <div class="profile-image-container">
+            <img src="{{ perfil.imagen.url }}" alt="Imagen de perfil">
+        </div>
+        {% endif %}
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% for field in form %}
+            {% if field.name == 'imagen' %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if perfil.imagen %}
+                        <div class="current-image-field">
+                            <label>
+                                <input type="checkbox" name="eliminar_imagen" id="id_eliminar_imagen">
+                                Eliminar imagen actual
+                            </label>
+                        </div>
+                    {% endif %}
+                </div>
+            {% elif field.name == 'disciplinas' %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    <div class="disciplines-container">
+                        {% for checkbox in field %}
+                            <div class="discipline-item">
+                                {{ checkbox.tag }}
+                                <label for="{{ checkbox.id_for_label }}">
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="field-errors">
+                            {% for error in field.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+        <div class="submit-button-container">
+            <button type="submit">Guardar Cambios</button>
+        </div>
+    </form>
+</section>
+
+<section class="profile-information">
     <h3>Información del Perfil</h3>
-    <p><strong>Nombre:</strong> {{ perfil.nombre_entidad }}</p>
-    <p><strong>Tipo:</strong> {{ perfil.get_tipo_difusor_display }}</p>
-    <p><strong>Descripción:</strong> {{ perfil.descripcion }}</p>
-    <p><strong>Teléfono:</strong> {{ perfil.telefono }}</p>
-    {% if perfil.direccion %}
-    <p><strong>Dirección:</strong> {{ perfil.direccion }}</p>
-    {% endif %}
-    {% if perfil.sitio_web %}
-    <p><strong>Sitio Web:</strong> <a href="{{ perfil.sitio_web }}" target="_blank">{{ perfil.sitio_web }}</a></p>
-    {% endif %}
+    <div class="profile-info-container">
+        <div class="info-column">
+            <p>
+                <strong>Nombre</strong>
+                {{ perfil.nombre_entidad }}
+            </p>
+            <p>
+                <strong>Tipo</strong>
+                {{ perfil.get_tipo_difusor_display }}
+            </p>
+            <p>
+                <strong>Descripción</strong>
+                {{ perfil.descripcion }}
+            </p>
+        </div>
+        <div class="info-column">
+            <p>
+                <strong>Teléfono</strong>
+                {{ perfil.telefono }}
+            </p>
+            {% if perfil.direccion %}
+            <p>
+                <strong>Dirección</strong>
+                {{ perfil.direccion }}
+            </p>
+            {% endif %}
+            {% if perfil.sitio_web %}
+            <p>
+                <strong>Sitio Web</strong>
+                <a href="{{ perfil.sitio_web }}" target="_blank">{{ perfil.sitio_web }}</a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
 </section>
 
 {% if perfil.puede_crear_eventos %}
-<section>
-    <h3>Mis Eventos</h3>
-    <a href="{% url 'crear_evento' %}">Crear Nuevo Evento</a>
+<section class="my-events">
+    <div class="my-events-header">
+        <h3>Mis Eventos</h3>
+    </div>
     
-    <table>
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for evento in eventos %}
-            <tr>
-                <td>{{ evento.titulo }}</td>
-                <td>{{ evento.fecha_evento|date:"d/m/Y H:i" }}</td>
-                <td>{% if evento.aprobado %}Aprobado{% else %}Pendiente{% endif %}</td>
-                <td>Ver | Editar</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No has creado eventos aún</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <button onclick="window.location.href='{% url 'crear_evento' %}'" class="create-event-button">
+        Crear Nuevo Evento
+    </button>
+    
+    <div class="events-grid">
+        {% for evento in eventos %}
+        <div class="event-card">
+            <div class="event-labels">
+                <div class="event-label">Título</div>
+                <div class="event-label">Fecha</div>
+                <div class="event-label">Estado</div>
+                <div class="event-label">Acciones</div>
+            </div>
+            <div class="event-values">
+                <div class="event-value">{{ evento.titulo }}</div>
+                <div class="event-value">{{ evento.fecha_evento|date:"d/m/Y H:i" }}</div>
+                <div class="event-value">{% if evento.aprobado %}Aprobado{% else %}Pendiente{% endif %}</div>
+                <div class="event-value event-actions">
+                    <a href="#" class="event-action-link">Ver</a>
+                    <a href="#" class="event-action-link">Editar</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="event-card">
+            <div class="event-value" style="grid-column: 1 / -1; text-align: center;">
+                No has creado eventos aún
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </section>
 {% endif %}
 
-<section>
-    <h3>Mis Publicaciones</h3>
-    <a href="{% url 'crear_publicacion' %}">Crear Nueva Publicación</a>
+<section class="my-posts">
+    <div class="my-posts-header">
+        <h3>Mis Publicaciones</h3>
+    </div>
     
-    <table>
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for publicacion in publicaciones %}
-            <tr>
-                <td>{{ publicacion.titulo }}</td>
-                <td>{{ publicacion.fecha_publicacion|date:"d/m/Y" }}</td>
-                <td>{% if publicacion.aprobado %}Aprobada{% else %}Pendiente{% endif %}</td>
-                <td>Ver | Editar</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No has creado publicaciones aún</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <button onclick="window.location.href='{% url 'crear_publicacion' %}'" class="create-post-button">
+        Crear Nueva Publicación
+    </button>
+    
+    <div class="posts-grid">
+        {% for publicacion in publicaciones %}
+        <div class="post-card">
+            <div class="post-labels">
+                <div class="post-label">Título</div>
+                <div class="post-label">Fecha</div>
+                <div class="post-label">Estado</div>
+                <div class="post-label">Acciones</div>
+            </div>
+            <div class="post-values">
+                <div class="post-value">{{ publicacion.titulo }}</div>
+                <div class="post-value">{{ publicacion.fecha_publicacion|date:"d/m/Y" }}</div>
+                <div class="post-value">{% if publicacion.aprobado %}Aprobada{% else %}Pendiente{% endif %}</div>
+                <div class="post-value post-actions">
+                    <a href="#" class="post-action-link">Ver</a>
+                    <a href="#" class="post-action-link">Editar</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="post-card">
+            <div class="post-value" style="grid-column: 1 / -1; text-align: center;">
+                No has creado publicaciones aún
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </section>
 {% endblock %}

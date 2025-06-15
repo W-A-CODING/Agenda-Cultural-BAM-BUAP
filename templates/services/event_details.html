@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ evento.titulo }}{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/event_details.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="evento-detalle">
+    <div class="back-button">
+        <a href="{% url 'agenda' %}" class="btn btn-primary">Volver a Agenda</a>
+    </div>
+    
+    <h1>{{ evento.titulo }}</h1>
+    
+    {% if evento.imagen %}
+        <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}" class="evento-imagen">
+    {% endif %}
+    
+    <div class="evento-info">
+        <p><strong>Fecha:</strong> {{ evento.fecha_evento|date:"d/m/Y" }}</p>
+        <p><strong>Hora:</strong> {{ evento.fecha_evento|time:"H:i" }}</p>
+        <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+        <p><strong>Disciplina:</strong> {{ evento.disciplina }}</p>
+        <p><strong>Clasificación:</strong> {{ evento.get_clasificacion_edad_display }}</p>
+        <p><strong>Precio:</strong> 
+            {% if evento.es_gratuito %}
+                Gratuito
+            {% else %}
+                ${{ evento.precio }}
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="evento-descripcion">
+        {{ evento.descripcion|linebreaks }}
+    </div>
+
+    <div class="difusor-info">
+        <h3>Organizado por:</h3>
+        <a href="{% url 'detalle_difusor' evento.difusor.id %}">{{ evento.difusor.nombre_entidad }}</a>
+    </div>
+</div>
+{% endblock %}

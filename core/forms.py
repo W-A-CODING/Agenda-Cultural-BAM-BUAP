@@ -29,6 +29,10 @@ class SolicitudDifusorForm(forms.ModelForm):
             'tipo_difusor', 'nombre_entidad', 'descripcion',
             'telefono', 'direccion', 'sitio_web'
         ]
+        labels = {
+            'direccion': 'Dirección (opcional)',
+            'sitio_web': 'Sitio web (opcional)'
+        }
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 4}),
             'direccion': forms.Textarea(attrs={'rows': 3}),
@@ -60,11 +64,10 @@ class PublicacionForm(forms.ModelForm):
         model = Publicacion
         fields = [
             'titulo', 'disciplina', 'descripcion', 'imagen',
-            'clasificacion_edad', 'link', 'fecha_publicacion'
+            'clasificacion_edad', 'link'
         ]
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 4}),
-            'fecha_publicacion': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
     
     def __init__(self, *args, **kwargs):

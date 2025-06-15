@@ -29,8 +29,10 @@ urlpatterns = [
     
     # Contenido público
     path('agenda/', views.agenda, name='agenda'),
+    path('agenda/<int:year>/<int:month>/<int:day>/', views.agenda, name='agenda_fecha'),
     path('agenda/<int:year>/<int:month>/', views.agenda_mes, name='agenda_mes'),
     path('eventos/', views.lista_eventos, name='lista_eventos'),
+    path('eventos/<int:evento_id>/', views.detalle_evento, name='detalle_evento'),
     path('publicaciones/', views.lista_publicaciones, name='lista_publicaciones'),
     path('lugares/', views.lista_lugares, name='lista_lugares'),
     path('artistas/', views.lista_artistas, name='lista_artistas'),

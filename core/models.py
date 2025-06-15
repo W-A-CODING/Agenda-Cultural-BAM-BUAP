@@ -105,10 +105,13 @@ class PerfilDifusor(models.Model):
         verbose_name_plural = 'Perfiles de Difusor'
     
     def puede_crear_eventos(self):
-        return self.tipo_difusor in ['lugar', 'organizacion']
+        return True  # Todos pueden crear eventos
     
     def puede_crear_publicaciones(self):
         return True  # Todos pueden crear publicaciones
+    
+    def __str__(self):
+        return f"{self.nombre_entidad} ({self.tipo_difusor})"
 
 # Disciplina Artística
 class Disciplina(models.Model):
@@ -119,6 +122,9 @@ class Disciplina(models.Model):
         db_table = 'disciplinas'
         verbose_name = 'Disciplina Artística'
         verbose_name_plural = 'Disciplinas Artísticas'
+
+    def __str__(self):
+        return dict(DISCIPLINAS_CHOICES)[self.nombre]
 
 # Evento
 class Evento(models.Model):
@@ -154,7 +160,6 @@ class Publicacion(models.Model):
     link = models.URLField(blank=True, null=True)
     fecha_publicacion = models.DateTimeField(default=timezone.now)
     aprobado = models.BooleanField(default=False)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     
     class Meta:
@@ -175,6 +180,9 @@ class PreferenciasUsuario(models.Model):
         db_table = 'preferencias_usuario'
         verbose_name = 'Preferencias de Usuario'
         verbose_name_plural = 'Preferencias de Usuarios'
+
+    def __str__(self):
+        return f"Preferencias de {self.usuario.username}"
 
 # Suscripciones (para lugares y organizaciones)
 class Suscripcion(models.Model):

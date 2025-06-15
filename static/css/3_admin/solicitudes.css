@@ -1,0 +1,177 @@
+/* Contenedor principal de solicitudes */
+.solicitudes-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+/* Estilo para la tabla transformada en cards */
+table {
+    border-collapse: separate;
+    border-spacing: 0 1rem;
+    width: 100%;
+}
+
+/* Ocultar encabezados originales de la tabla */
+thead {
+    display: none;
+}
+
+/* Convertir filas en cards */
+tbody tr {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+tbody tr::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient-accent);
+}
+
+tbody tr:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-strong);
+}
+
+/* Estilo para las celdas */
+tbody td {
+    padding: 0.8rem;
+    position: relative;
+    padding-left: 120px;
+}
+
+/* Pseudo-elementos para etiquetas */
+tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    width: 100px;
+    font-weight: bold;
+    color: var(--navy);
+}
+
+/* Personalización por tipo de celda */
+td:nth-child(1)::before { content: "Usuario:"; }
+td:nth-child(2)::before { content: "Tipo:"; }
+td:nth-child(3)::before { content: "Entidad:"; }
+td:nth-child(4)::before { content: "Fecha:"; }
+td:nth-child(5)::before { content: "Acciones:"; }
+
+/* Estilo para el botón de revisar */
+td:last-child a {
+    display: inline-block;
+    background: var(--gradient-primary);
+    color: var(--cream);
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+td:last-child a:hover {
+    background: var(--gradient-accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Mensaje cuando no hay solicitudes */
+tr:only-child td {
+    text-align: center;
+    padding: 2rem;
+    color: var(--navy);
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+/* Badges para el tipo de difusor */
+td:nth-child(2) {
+    position: relative;
+}
+
+td:nth-child(2)::after {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+}
+
+/* Animación de entrada para las cards */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+tbody tr {
+    animation: slideIn 0.4s ease forwards;
+}
+
+tbody tr:nth-child(2) { animation-delay: 0.1s; }
+tbody tr:nth-child(3) { animation-delay: 0.2s; }
+tbody tr:nth-child(4) { animation-delay: 0.3s; }
+tbody tr:nth-child(5) { animation-delay: 0.4s; }
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .solicitudes-container {
+        padding: 1rem;
+    }
+
+    tbody td {
+        padding-left: 1rem;
+        padding-top: 2rem;
+    }
+
+    tbody td::before {
+        top: 0.5rem;
+        left: 1rem;
+    }
+}
+
+/* Estilos para estados de solicitud */
+.estado-pendiente {
+    color: var(--orange);
+    font-weight: 500;
+}
+
+.estado-aprobado {
+    color: var(--green);
+    font-weight: 500;
+}
+
+.estado-rechazado {
+    color: var(--red);
+    font-weight: 500;
+}
+
+/* Decoración adicional */
+tbody tr::after {
+    content: '';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, transparent 0%, rgba(247, 127, 0, 0.1) 100%);
+    z-index: 0;
+}

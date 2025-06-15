@@ -1,0 +1,189 @@
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.8s ease;
+}
+
+/* Carousel Section */
+#carousel {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+    overflow: hidden;
+    height: 70vh;
+    min-height: 400px;
+}
+
+#carousel > div {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+#carousel > div.active {
+    display: block;
+}
+
+#carousel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+    transition: filter 0.3s ease;
+}
+
+#carousel .event-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(transparent, rgba(29, 53, 87, 0.9));
+    color: var(--cream);
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+#carousel h4 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-family: 'Cocomat Pro', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#carousel p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Carousel Navigation */
+.carousel-nav {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+    background: var(--orange);
+    transform: scale(1.2);
+}
+
+/* Call to Action Sections */
+.cta-section {
+    background: white;
+    border-radius: 15px;
+    padding: 3rem 2rem;
+    margin: 2rem auto;
+    margin-top: 102px;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s ease;
+}
+
+.cta-section:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-strong);
+}
+
+.cta-section p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--navy);
+}
+
+.cta-section a {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: var(--gradient-primary);
+    color: var(--cream);
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+}
+
+.cta-section a:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #carousel {
+        height: 50vh;
+        min-height: 300px;
+    }
+
+    #carousel h4 {
+        font-size: 1.8rem;
+    }
+
+    #carousel p {
+        font-size: 1rem;
+    }
+
+    .cta-section {
+        margin: 1rem;
+        padding: 2rem 1rem;
+    }
+
+    .carousel-nav {
+        bottom: 0.5rem;
+    }
+
+    .carousel-dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    #carousel {
+        height: 40vh;
+        min-height: 250px;
+    }
+
+    #carousel h4 {
+        font-size: 1.5rem;
+    }
+
+    .cta-section p {
+        font-size: 1rem;
+    }
+
+    .cta-section a {
+        display: block;
+        margin: 0.5rem auto;
+        max-width: 200px;
+    }
+}

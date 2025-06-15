@@ -33,9 +33,11 @@
         {{ form.password2.errors }}
     </div>
     
-    <div>
+    <div class="form-check">
         {{ form.recibir_novedades }}
-        <label for="{{ form.recibir_novedades.id_for_label }}">{{ form.recibir_novedades.label }}</label>
+        <label for="{{ form.recibir_novedades.id_for_label }}">
+            {{ form.recibir_novedades.label }}
+        </label>
     </div>
     
     <button type="submit">Registrarse</button>

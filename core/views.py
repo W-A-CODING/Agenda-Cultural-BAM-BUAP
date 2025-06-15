@@ -12,6 +12,15 @@ from datetime import datetime, timedelta
 import json
 import requests
 from django.contrib.admin.views.decorators import staff_member_required
+from calendar import monthcalendar, month_name
+from collections import defaultdict
+from calendar import monthcalendar
+from collections import defaultdict
+from datetime import date
+from django.utils import timezone
+from django.shortcuts import render
+from .models import Evento
+
 
 from .models import *
 from .forms import *
@@ -180,10 +189,20 @@ def perfil_difusor(request):
     eventos = perfil.eventos.all()
     publicaciones = perfil.publicaciones.all()
     
+    if request.method == 'POST':
+        form = PerfilDifusorForm(request.POST, request.FILES, instance=perfil)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Perfil actualizado exitosamente.')
+            return redirect('perfil_difusor')
+    else:
+        form = PerfilDifusorForm(instance=perfil)
+    
     context = {
         'perfil': perfil,
         'eventos': eventos,
         'publicaciones': publicaciones,
+        'form': form
     }
     return render(request, '2_difusor/profile.html', context)
 
@@ -249,9 +268,16 @@ def perfil_usuario(request):
     return render(request, '1_user/profile.html', context)
 
 # Agenda
-def agenda(request):
-    hoy = timezone.now().date()
-    inicio_semana = hoy - timedelta(days=hoy.weekday())
+def agenda(request, year=None, month=None, day=None):
+    if year and month and day:
+        try:
+            fecha_seleccionada = date(int(year), int(month), int(day))
+        except ValueError:
+            fecha_seleccionada = timezone.now().date()
+    else:
+        fecha_seleccionada = timezone.now().date()
+
+    inicio_semana = fecha_seleccionada - timedelta(days=fecha_seleccionada.weekday())
     fin_semana = inicio_semana + timedelta(days=6)
     
     eventos_semana = Evento.objects.filter(
@@ -260,29 +286,88 @@ def agenda(request):
         fecha_evento__date__lte=fin_semana
     ).order_by('fecha_evento')
     
+    semana_anterior = inicio_semana - timedelta(days=7)
+    semana_siguiente = inicio_semana + timedelta(days=7)
+
     context = {
         'eventos_semana': eventos_semana,
         'inicio_semana': inicio_semana,
         'fin_semana': fin_semana,
+        'vista': 'semanal',
+        'year': fecha_seleccionada.year,
+        'month': fecha_seleccionada.month,
+        'prev_day': semana_anterior.day,
+        'prev_month': semana_anterior.month,
+        'prev_year': semana_anterior.year,
+        'next_day': semana_siguiente.day,
+        'next_month': semana_siguiente.month,
+        'next_year': semana_siguiente.year,
     }
     return render(request, 'services/agenda.html', context)
 
 def agenda_mes(request, year, month):
+    # Convertir año y mes a enteros
+    year = int(year)
+    month = int(month)
+    
+    # Obtener el calendario del mes
+    cal = monthcalendar(year, month)
+    
+    # Cálculo de anterior y siguiente mes
+    if month == 1:
+        prev_month = 12
+        prev_year = year - 1
+    else:
+        prev_month = month - 1
+        prev_year = year
+
+    if month == 12:
+        next_month = 1
+        next_year = year + 1
+    else:
+        next_month = month + 1
+        next_year = year
+    
+    # Obtener todos los eventos del mes
     eventos_mes = Evento.objects.filter(
         aprobado=True,
         fecha_evento__year=year,
         fecha_evento__month=month
     ).order_by('fecha_evento')
     
+    # Crear diccionario de eventos por día
+    eventos_por_dia = defaultdict(list)
+    for evento in eventos_mes:
+        eventos_por_dia[evento.fecha_evento.day].append({
+            'titulo': evento.titulo,
+            'hora': evento.fecha_evento.strftime('%H:%M'),
+            'id': evento.id
+        })
+    
     context = {
-        'eventos_mes': eventos_mes,
+        'calendario': cal,
+        'eventos_por_dia': dict(eventos_por_dia),
         'year': year,
         'month': month,
+        'nombre_mes': month_name[month],
+        'prev_year': prev_year,
+        'prev_month': prev_month,
+        'next_year': next_year,
+        'next_month': next_month,
+        'vista': 'mensual'
     }
     return render(request, 'services/agenda_month.html', context)
 
+def detalle_evento(request, evento_id):
+    evento = get_object_or_404(Evento, id=evento_id, aprobado=True)
+    context = {
+        'evento': evento,
+    }
+    return render(request, 'services/event_details.html', context)
+
 # Lista de eventos
 def lista_eventos(request):
+    # Obtener todos los eventos aprobados
     eventos = Evento.objects.filter(aprobado=True, fecha_evento__gte=timezone.now())
     
     # Filtros
@@ -307,7 +392,7 @@ def lista_eventos(request):
     else:
         eventos = eventos.order_by('fecha_evento')
     
-    paginator = Paginator(eventos, 12)
+    paginator = Paginator(eventos, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -378,7 +463,7 @@ def lista_publicaciones(request):
     
     # Paginación manual para mantener el orden personalizado
     from django.core.paginator import Paginator
-    paginator = Paginator(publicaciones, 12)
+    paginator = Paginator(publicaciones, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -399,7 +484,6 @@ def lista_publicaciones(request):
     
     return render(request, 'services/publications_list.html', context)
 
-# Lista de lugares
 def lista_lugares(request):
     # Consulta a Wikidata
     lugares_wikidata = []
@@ -407,12 +491,12 @@ def lista_lugares(request):
     try:
         # Query SPARQL para museos en Puebla
         query = """
-        SELECT ?museo ?museoLabel ?imagen ?coordenadas WHERE {
-          ?museo wdt:P31 wd:Q33506;
-                 wdt:P131 wd:Q79923.
+        SELECT DISTINCT ?museo ?museoLabel ?imagen ?coordenadas WHERE {
+          ?museo wdt:P31/wdt:P279* wd:Q33506.
+          {?museo wdt:P131 wd:Q125293} UNION {?museo wdt:P131 wd:Q79923} UNION {?museo wdt:P131 wd:Q7258412} .
           OPTIONAL { ?museo wdt:P18 ?imagen }
           OPTIONAL { ?museo wdt:P625 ?coordenadas }
-          SERVICE wikibase:label { bd:serviceParam wikibase:language "es,en". }
+          SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
         }
         """
         
@@ -421,13 +505,30 @@ def lista_lugares(request):
         data = r.json()
         
         for item in data['results']['bindings']:
+            coordenadas_raw = item.get('coordenadas', {}).get('value')
+            coordenadas_procesadas = None
+            
+            # Procesar coordenadas si existen
+            if coordenadas_raw:
+                # Las coordenadas vienen como "Point(longitud latitud)"
+                # Necesitamos extraer latitud,longitud para Google Maps
+                import re
+                match = re.search(r'Point\(([^)]+)\)', coordenadas_raw)
+                if match:
+                    coords = match.group(1).split()
+                    if len(coords) == 2:
+                        longitud, latitud = coords
+                        # Google Maps espera formato: latitud,longitud
+                        coordenadas_procesadas = f"{latitud},{longitud}"
+            
             lugar = {
                 'nombre': item['museoLabel']['value'],
                 'imagen': item.get('imagen', {}).get('value'),
-                'coordenadas': item.get('coordenadas', {}).get('value'),
+                'coordenadas': coordenadas_procesadas,
             }
             lugares_wikidata.append(lugar)
-    except:
+    except Exception as e:
+        print(f"Error al consultar Wikidata: {e}")
         pass
     
     # Lugares locales

@@ -42,4 +42,15 @@ document.addEventListener('DOMContentLoaded', function() {
             hideLoader();
         }
     });
+
+    //acitvar menu si la pantalla es pequeña
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggle = document.querySelector('.menu-toggle');
+        const navbarRight = document.querySelector('.navbar-right');
+
+        toggle.addEventListener('click', () => {
+            navbarRight.classList.toggle('active');
+        });
+    });
+
 });
